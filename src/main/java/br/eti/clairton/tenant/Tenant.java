@@ -15,5 +15,5 @@ public abstract class Tenant<T> {
 
 	public abstract Predicate add(
 			@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from);
+			final @NotNull From<?, T> from, final @NotNull Predicate appendTo);
 }

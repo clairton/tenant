@@ -18,8 +18,9 @@ public class RecursoTenant extends Tenant<Recurso> {
 
 	@Override
 	public Predicate add(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, Recurso> from) {
+			final @NotNull From<?, Recurso> from,
+			final @NotNull Predicate appendTo) {
 		final Join<Recurso, Aplicacao> join = from.join(Recurso_.aplicacao);
-		return builder.run(criteriaBuilder, join);
+		return builder.run(criteriaBuilder, join, appendTo);
 	}
 }

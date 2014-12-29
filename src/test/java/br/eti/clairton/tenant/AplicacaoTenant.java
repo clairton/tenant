@@ -19,9 +19,10 @@ public class AplicacaoTenant extends Tenant<Aplicacao> {
 
 	@Override
 	public Predicate add(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, Aplicacao> from) {
+			final @NotNull From<?, Aplicacao> from,
+			final @NotNull Predicate appendTo) {
 		final Path<String> path = from.get(Aplicacao_.nome);
-		return criteriaBuilder.notEqual(path,
-				"OutroTesteQueNãoDeveAparecerNaConsulta");
+		return criteriaBuilder.and(appendTo, criteriaBuilder.notEqual(path,
+				"OutroTesteQueNãoDeveAparecerNaConsulta"));
 	}
 }

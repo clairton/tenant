@@ -1,6 +1,8 @@
 package br.eti.clairton.tenant;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.util.List;
@@ -61,12 +63,10 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Operacao> query = builder
 				.createQuery(Operacao.class);
 		final Root<Operacao> from = query.from(Operacao.class);
-		Predicate predicate = tenant.run(builder, from);
-		final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
-		predicate = builder.and(predicate, tenant.run(builder, join));
-		predicate = builder.and(predicate,
+		Predicate predicate = tenant.run(builder, from,
 				builder.greaterThan(from.get(Operacao_.id), 0l));
-		query.where(predicate);
+		final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
+		query.where(tenant.run(builder, join, predicate));
 		final TypedQuery<Operacao> typedQuery = entityManager
 				.createQuery(query);
 		final List<Operacao> result = typedQuery.getResultList();
@@ -84,5 +84,15 @@ public class TenantBuilderTest {
 				.createQuery(query);
 		final List<Operacao> result = typedQuery.getResultList();
 		assertEquals(2, result.size());
+	}
+
+	@Test
+	public void testExistTenant() {
+		assertTrue(tenant.exist(Recurso.class));
+	}
+
+	@Test
+	public void testNotExistTenant() {
+		assertFalse(tenant.exist(Operacao.class));
 	}
 }
