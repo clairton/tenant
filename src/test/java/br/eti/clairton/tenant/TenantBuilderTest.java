@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.junit.Before;
@@ -47,9 +49,27 @@ public class TenantBuilderTest {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
 		final Root<Recurso> from = query.from(Recurso.class);
-		tenant.run(builder, query, from);
+		query.where(tenant.run(builder, from));
 		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
 		final List<Recurso> result = typedQuery.getResultList();
+		assertEquals(1, result.size());
+	}
+
+	@Test
+	public void testWithTenantInJoin() {
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Operacao> query = builder
+				.createQuery(Operacao.class);
+		final Root<Operacao> from = query.from(Operacao.class);
+		Predicate predicate = tenant.run(builder, from);
+		final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
+		predicate = builder.and(predicate, tenant.run(builder, join));
+		predicate = builder.and(predicate,
+				builder.greaterThan(from.get(Operacao_.id), 0l));
+		query.where(predicate);
+		final TypedQuery<Operacao> typedQuery = entityManager
+				.createQuery(query);
+		final List<Operacao> result = typedQuery.getResultList();
 		assertEquals(1, result.size());
 	}
 
@@ -59,7 +79,7 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Operacao> query = builder
 				.createQuery(Operacao.class);
 		final Root<Operacao> from = query.from(Operacao.class);
-		tenant.run(builder, query, from);
+		query.where(tenant.run(builder, from));
 		final TypedQuery<Operacao> typedQuery = entityManager
 				.createQuery(query);
 		final List<Operacao> result = typedQuery.getResultList();

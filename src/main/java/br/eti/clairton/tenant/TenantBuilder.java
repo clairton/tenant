@@ -7,8 +7,8 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 
 @Dependent
@@ -22,11 +22,22 @@ public class TenantBuilder {
 		this.tenants = tenants;
 	}
 
-	public <T> void run(@NotNull final CriteriaBuilder criteriaBuilder,
-			@NotNull final CriteriaQuery<?> criteriaQuery,
+	public <T> Predicate run(@NotNull final CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, T> from) {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
-		final TenantType type = new TenantType() {
+		final TenantType qualifier = getType(klazz);
+		final Instance<Tenant<?>> instance = tenants.select(qualifier);
+		if (!instance.isUnsatisfied()) {
+			@SuppressWarnings("unchecked")
+			final Tenant<T> tenant = (Tenant<T>) instance.get();
+			return tenant.add(criteriaBuilder, from);
+		} else {
+			return criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
+		}
+	}
+
+	private final static TenantType getType(final Class<?> klazz) {
+		return new TenantType() {
 
 			@Override
 			public Class<? extends Annotation> annotationType() {
@@ -38,12 +49,5 @@ public class TenantBuilder {
 				return klazz;
 			}
 		};
-		final Instance<Tenant<?>> instance = tenants.select(type);
-		if (instance.isUnsatisfied()) {
-			return;
-		}
-		@SuppressWarnings("unchecked")
-		final Tenant<T> tenant = (Tenant<T>) instance.get();
-		tenant.add(criteriaBuilder, criteriaQuery, from);
 	}
 }
