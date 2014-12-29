@@ -88,7 +88,14 @@
 			<version>1.10.8</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>	<build>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.9</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
