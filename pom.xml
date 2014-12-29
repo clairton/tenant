@@ -126,7 +126,7 @@
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryName>${project.artifactId}</repositoryName>      <!-- github repo name -->
+					<repositoryName>mvn-repo</repositoryName>      <!-- github repo name -->
 					<repositoryOwner>clairton</repositoryOwner>    <!-- github username -->
 				</configuration>
 				<executions>
