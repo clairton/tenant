@@ -47,6 +47,17 @@ public class TenantBuilderTest {
 	}
 
 	@Test
+	public void testStartWithNull() {
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
+		final Root<Recurso> from = query.from(Recurso.class);
+		query.where(tenant.run(builder, from));
+		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
+		final List<Recurso> result = typedQuery.getResultList();
+		assertEquals(1, result.size());
+	}
+
+	@Test
 	public void testWithTenant() {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
@@ -63,7 +74,7 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Operacao> query = builder
 				.createQuery(Operacao.class);
 		final Root<Operacao> from = query.from(Operacao.class);
-		Predicate predicate = tenant.run(builder, from,
+		Predicate[] predicate = tenant.run(builder, from,
 				builder.greaterThan(from.get(Operacao_.id), 0l));
 		final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
 		query.where(tenant.run(builder, join, predicate));

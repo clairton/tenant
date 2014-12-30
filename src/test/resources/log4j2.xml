@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss,SSS} %5p [%-20c{1}] %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="org.apache.log4j.xml" level="info" />
+		<Logger name="eti.br.clairton" level="debug" />
+		<Logger name="br.com.caelum" level="info" />
+		<Logger name="org.batoo" level="info" />
+		<Logger name="org.apache.directory" level="info" />
+		<Root level="debug">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</Loggers>
+</Configuration>
