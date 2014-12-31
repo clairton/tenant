@@ -1,6 +1,6 @@
 # Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
 
-	Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação possui vários recursos, mas o usuário logado só pode ver os recursos da aplicação em que ele está relacionado. Montamos então um tenant para aplicação. Ele deve ser qualificado como @TenantType(Aplicacao.class) e implementar o método do contrato Tenant chamado "add"
+	Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação possui vários recursos, mas só iremos mostrar aquelas aplicações que não se chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real poderiamos mostra para o usuário logado só os recursos da aplicação em que ele está relacionado. Mas enfim, montamos então um tenant para aplicação.
     
 ```java	
 import java.util.List;
@@ -14,27 +14,35 @@ import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 
 @Dependent// para ser geneciado pelo CDI
-@TenantType(Aplicacao.class)//Qualificando ele com um Tenant para o Tipo //Aplicacação
+//Qualificando ele com um Tenant para o Tipo Aplicacação
+@TenantType(Aplicacao.class)
+//implementando o contrato necessário para poder ser invocado pelo TenantBuilder
 public class AplicacaoTenant extends Tenant<Aplicacao> {
-
+	/*
+     * Deve injetar o Tenant Builder e Chamar o Super, isso fará com que ele
+     * possa se chamar recursivamente
+     */
 	@Inject
 	public AplicacaoTenant(final TenantBuilder builder) {
 		super(builder);
 	}
 
+	//Contrato que adicionara o Predicado do Usuario Logado
 	@Override
 	public List<Predicate> add(@NotNull final CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, Aplicacao> from,
 			final @NotNull List<Predicate> appendTo) {
 		final Path<String> path = from.get(Aplicacao_.nome);
-		final String value = "OutroTesteQueNãoDeveAparecerNaConsulta";
+		final String value = "AplicaçãoQueNãoDeveAparecerNaConsulta";
 		final Predicate predicate = criteriaBuilder.notEqual(path, value);
+        //adiciona o predicado aos já existentes
 		appendTo.add(predicate);
 		return appendTo;
 	}
 }
 
 ```
+	
 
 
 Para usar será necessário adicionar os repositórios maven:
