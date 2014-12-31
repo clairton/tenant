@@ -1,6 +1,10 @@
 # Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
 
-	Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação possui vários recursos, mas só iremos mostrar aquelas aplicações que não se chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real poderiamos mostrar para o usuário logado só os recursos da aplicação em que ele está relacionado. Mas enfim, montamos então um tenant para aplicação.
+	Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação
+possui vários recursos, mas só iremos mostrar aquelas aplicações que não se
+chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real poderiamos
+mostrar para o usuário logado só os recursos da aplicação em que ele está
+relacionado. Mas enfim, montamos então um tenant para aplicação.
     
 ```java	
 import java.util.List;
@@ -42,7 +46,8 @@ public class AplicacaoTenant extends Tenant<Aplicacao> {
 }
 
 ```
-	O tenant de Recurso, somente irá chamar o tenant relacionado a Aplicação, fica dessa forma:
+	O tenant de Recurso, somente irá chamar o tenant relacionado a 
+    Aplicação, fica dessa forma:
 ```java
 
 import javax.enterprise.context.Dependent;
@@ -73,7 +78,8 @@ public class RecursoTenant extends Tenant<Recurso> {
 			final @NotNull List<Predicate> appendTo) {
         /*
          * não temos um predicado diretamente os atributos de Recurso, para sim
-         * temos que pegar os Recurso relacionados a Aplicação que queremos, por          * isso faremos o join de Recurso com Aplicação
+         * temos que pegar os Recurso relacionados a Aplicação que queremos, por
+         * isso faremos o join de Recurso com Aplicação
          */
 		final Join<Recurso, Aplicacao> join = from.join(Recurso_.aplicacao);
         /*
