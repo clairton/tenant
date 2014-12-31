@@ -1,10 +1,10 @@
 # Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
 
-	Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação
-    possui vários recursos, mas só iremos mostrar aquelas aplicações que não se
-    chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real
-    poderiamos mostrar para o usuário logado só os recursos da aplicação em que
-    ele está relacionado. Mas enfim, montamos então um tenant para aplicação.
+   Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação
+possui vários recursos, mas só iremos mostrar aquelas aplicações que não se
+chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real
+poderiamos mostrar para o usuário logado só os recursos da aplicação em que
+ele está relacionado. Mas enfim, montamos então um tenant para aplicação.
     
 ```java	
 import java.util.List;
