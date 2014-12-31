@@ -84,8 +84,47 @@ public class RecursoTenant extends Tenant<Recurso> {
 	}
 }
 ```
+Finalmente podemos fazer a consulta:
 
+```java
+@Inject EntityManager entityManager;
+@Inject TenantBuilder tenant;
+// cortamos o código aqui, para não ficar muito extenso
+final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
+final Root<Recurso> from = query.from(Recurso.class);
+//recurpera os predicados
+final Predicate[] predicates = tenant.run(builder, from)
+//aplicaca os predicados
+query.where(predicates);
+final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
+/*
+ * Retornara somente os Recursos que estão relacionados as Aplicações com nome
+ * diferente de "AplicaçãoQueNãoDeveAparecerNaConsulta"
+ */
+final List<Recurso> result = typedQuery.getResultList();
+```
+Para fazer o uso de JOINS, colocaremos mais uma entidade chamado Operação para exemplificar
 
+```java
+final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+final CriteriaQuery<Operacao> query = builder.createQuery(Operacao.class);
+final Root<Operacao> from = query.from(Operacao.class);
+//recupera o predicado do from
+Predicate[] predicate = tenant.run(builder, from);
+final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
+//recupera os predicado do join
+predicate = tenant.run(builder, join, predicate);
+//aplica os predicados
+query.where(predicate);
+final TypedQuery<Operacao> typedQuery = entityManager.createQuery(query);
+/*
+ * Retornara somente as Operações que estão relacionados aos Recursos 
+ * que por sua vez estão relacionados as Aplicações com nome
+ * diferente de "AplicaçãoQueNãoDeveAparecerNaConsulta"
+ */
+final List<Operacao> result = typedQuery.getResultList();
+```
 Para usar será necessário adicionar os repositórios maven:
 
 ```xml
