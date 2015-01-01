@@ -147,7 +147,7 @@ Para usar será necessário adicionar os repositórios maven:
 ```xml
 <dependency>
     <groupId>br.eti.clairton</groupId>
-	<artifactId>repository</artifactId>
+	<artifactId>tenant</artifactId>
 	<version>0.1.0</version>
 </dependency>
 ```
