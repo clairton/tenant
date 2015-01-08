@@ -1,9 +1,6 @@
 package br.eti.clairton.tenant;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
@@ -20,12 +17,12 @@ import org.apache.logging.log4j.Logger;
 @Dependent
 public class TenantBuilder {
 
-	private final Instance<Tenant<?>> tenants;
+	private final Instance<Tenantable<?>> tenants;
 
 	private final Logger logger;
 
 	@Inject
-	public TenantBuilder(@Any final Instance<Tenant<?>> tenants,
+	public TenantBuilder(@Any final Instance<Tenantable<?>> tenants,
 			@Default final Logger logger) {
 		super();
 		this.tenants = tenants;
@@ -34,46 +31,29 @@ public class TenantBuilder {
 
 	public Boolean exist(final Class<?> klazz) {
 		final TenantType qualifier = getType(klazz);
-		final Instance<Tenant<?>> instance = tenants.select(qualifier);
+		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
 		return !instance.isUnsatisfied();
 	}
 
-	public <T> Predicate[] run(@NotNull final CriteriaBuilder criteriaBuilder,
+	public <T, Y> Predicate run(@NotNull final CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, T> from,
-			final @NotNull Predicate... appendTo) {
-		final List<Predicate> in = new ArrayList<>();
-		in.addAll(Arrays.asList(appendTo));
-		final List<Predicate> predicates = run(criteriaBuilder, from, in);
-		return predicates.toArray(new Predicate[predicates.size()]);
-	}
-
-	public <T> List<Predicate> run(
-			@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from,
-			final @NotNull List<Predicate> appendTo) {
+			final @NotNull @TenantValue Y tenantValue) throws TenantNotFound {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);
-		final Instance<Tenant<?>> instance = tenants.select(qualifier);
+		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
 		if (!instance.isUnsatisfied()) {
 			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
-			final Tenant<T> tenant = cast(instance.get());
-			return tenant.add(criteriaBuilder, from, appendTo);
+			final Tenantable<T> tenant = cast(instance.get());
+			return tenant.add(criteriaBuilder, from, tenantValue);
 		} else {
 			logger.debug("Tenant para {} não encontrado", klazz.getSimpleName());
-			return appendTo;
+			throw new TenantNotFound();
 		}
 	}
 
-	public <T> Predicate[] run(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from) {
-		final List<Predicate> predicates = run(criteriaBuilder, from,
-				new ArrayList<>());
-		return predicates.toArray(new Predicate[predicates.size()]);
-	}
-
 	@SuppressWarnings("unchecked")
-	private <T> Tenant<T> cast(@NotNull final Tenant<?> tenant) {
-		return (Tenant<T>) tenant;
+	private <T> Tenantable<T> cast(@NotNull final Tenantable<?> tenant) {
+		return (Tenantable<T>) tenant;
 	}
 
 	private final static TenantType getType(final Class<?> klazz) {

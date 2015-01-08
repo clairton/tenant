@@ -13,7 +13,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.junit.Before;
@@ -25,6 +24,7 @@ public class TenantBuilderTest {
 	private @Inject EntityManager entityManager;
 	private @Inject Connection connection;
 	private @Inject TenantBuilder tenant;
+	private String nome = "OutroTesteQueNãoDeveAparecerNaConsulta";
 
 	@Before
 	public void init() throws Exception {
@@ -38,8 +38,7 @@ public class TenantBuilderTest {
 		final Recurso recurso = new Recurso(aplicacao, "Teste");
 		final Operacao operacao = new Operacao(recurso, "Teste");
 		entityManager.persist(operacao);
-		final Aplicacao aplicacao2 = new Aplicacao(
-				"OutroTesteQueNãoDeveAparecerNaConsulta");
+		final Aplicacao aplicacao2 = new Aplicacao(nome);
 		final Recurso recurso2 = new Recurso(aplicacao2, "OutroTeste");
 		final Operacao operacao2 = new Operacao(recurso2, "OutroTeste");
 		entityManager.persist(operacao2);
@@ -51,7 +50,7 @@ public class TenantBuilderTest {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
 		final Root<Recurso> from = query.from(Recurso.class);
-		query.where(tenant.run(builder, from));
+		query.where(tenant.run(builder, from, nome));
 		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
 		final List<Recurso> result = typedQuery.getResultList();
 		assertEquals(1, result.size());
@@ -62,7 +61,7 @@ public class TenantBuilderTest {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
 		final Root<Recurso> from = query.from(Recurso.class);
-		query.where(tenant.run(builder, from));
+		query.where(tenant.run(builder, from, nome));
 		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
 		final List<Recurso> result = typedQuery.getResultList();
 		assertEquals(1, result.size());
@@ -74,10 +73,8 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Operacao> query = builder
 				.createQuery(Operacao.class);
 		final Root<Operacao> from = query.from(Operacao.class);
-		Predicate[] predicate = tenant.run(builder, from,
-				builder.greaterThan(from.get(Operacao_.id), 0l));
 		final Join<Operacao, Recurso> join = from.join(Operacao_.recurso);
-		query.where(tenant.run(builder, join, predicate));
+		query.where(tenant.run(builder, join, nome));
 		final TypedQuery<Operacao> typedQuery = entityManager
 				.createQuery(query);
 		final List<Operacao> result = typedQuery.getResultList();
@@ -90,7 +87,11 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Operacao> query = builder
 				.createQuery(Operacao.class);
 		final Root<Operacao> from = query.from(Operacao.class);
-		query.where(tenant.run(builder, from));
+		try {
+			query.where(tenant.run(builder, from, nome));
+		} catch (final TenantNotFound e) {
+
+		}
 		final TypedQuery<Operacao> typedQuery = entityManager
 				.createQuery(query);
 		final List<Operacao> result = typedQuery.getResultList();

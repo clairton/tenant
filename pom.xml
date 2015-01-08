@@ -118,7 +118,7 @@
 			<extension>
 				<groupId>ar.com.synergian</groupId>
 				<artifactId>wagon-git</artifactId>
-				<version>0.2.3</version>
+				<version>0.2.2</version>
 			</extension>
 		</extensions>
 	</build>

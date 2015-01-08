@@ -1,7 +1,5 @@
 package br.eti.clairton.tenant;
 
-import java.util.List;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,17 +10,19 @@ import javax.validation.constraints.NotNull;
 
 @Dependent
 @TenantType(Recurso.class)
-public class RecursoTenant extends Tenant<Recurso> {
+public class RecursoTenant extends Tenantable<Recurso> {
+	private final TenantBuilder builder;
+
 	@Inject
 	public RecursoTenant(final TenantBuilder builder) {
-		super(builder);
+		this.builder = builder;
 	}
 
 	@Override
-	public List<Predicate> add(@NotNull final CriteriaBuilder criteriaBuilder,
+	public Predicate add(@NotNull final CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, Recurso> from,
-			final @NotNull List<Predicate> appendTo) {
+			final @NotNull Object tenantValue) {
 		final Join<Recurso, Aplicacao> join = from.join(Recurso_.aplicacao);
-		return builder.run(criteriaBuilder, join, appendTo);
+		return builder.run(criteriaBuilder, join, tenantValue);
 	}
 }
