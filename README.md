@@ -32,8 +32,8 @@ public class AplicacaoTenant extends Tenantable<Aplicacao> {
 	}
 }
 ```
-	O tenant de Recurso, somente irá chamar o tenant relacionado a 
-    Aplicação, fica dessa forma:
+O tenant de Recurso, somente irá chamar o tenant relacionado a Aplicação, fica 
+dessa forma:
 ```java
 package br.eti.clairton.tenant;
 
