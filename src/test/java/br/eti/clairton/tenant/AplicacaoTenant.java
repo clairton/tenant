@@ -7,9 +7,12 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 
-@Dependent
+@Dependent// para ser geneciado pelo CDI
+//Qualificando ele com um Tenant para o Tipo Aplicacação
 @TenantType(Aplicacao.class)
 public class AplicacaoTenant extends Tenantable<Aplicacao> {
+	
+	//Contrato que adicionara o Predicado que desejamos
 	@Override
 	public Predicate add(final @NotNull CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, Aplicacao> from,
