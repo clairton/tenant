@@ -91,7 +91,7 @@ final Root<Recurso> from = query.from(Recurso.class);
 //recurpera os predicados
 final Predicate predicate = tenant.run(builder, from, nome);
 //aplicaca os predicados
-query.where(predicates);
+query.where(predicate);
 final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
 /*
  * Retornara somente os Recursos que estão relacionados as Aplicações com nome
