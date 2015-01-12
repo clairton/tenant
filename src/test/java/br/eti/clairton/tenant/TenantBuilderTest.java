@@ -61,8 +61,19 @@ public class TenantBuilderTest {
 		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
 		final Root<Recurso> from = query.from(Recurso.class);
-		query.where(tenant.run(builder, from, nome));
+		try {
+			//recurpera os predicados
+			final Predicate predicate = tenant.run(builder, from);
+			//aplicaca os predicados
+			query.where(predicate);
+		} catch (final TenantNotFound e) {
+			//caso não haja tenant irá lançar a exceção
+		}
 		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
+		/*
+		 * Retornara somente os Recursos que estão relacionados as Aplicações com nome
+		 * diferente de "AplicaçãoQueNãoDeveAparecerNaConsulta"
+		 */
 		final List<Recurso> result = typedQuery.getResultList();
 		assertEquals(1, result.size());
 	}
