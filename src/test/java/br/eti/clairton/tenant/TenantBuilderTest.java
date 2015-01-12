@@ -13,6 +13,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.junit.Before;
@@ -63,7 +64,7 @@ public class TenantBuilderTest {
 		final Root<Recurso> from = query.from(Recurso.class);
 		try {
 			//recurpera os predicados
-			final Predicate predicate = tenant.run(builder, from);
+			final Predicate predicate = tenant.run(builder, from, nome);
 			//aplicaca os predicados
 			query.where(predicate);
 		} catch (final TenantNotFound e) {
