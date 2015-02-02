@@ -7,6 +7,7 @@
 	<properties>
 		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
+		<weld.version>2.2.8.Final</weld.version>
 	</properties>
 
 	<dependencies>
@@ -79,13 +80,13 @@
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se</artifactId>
-			<version>2.2.6.Final</version>
+			<version>${weld.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
-			<version>2.2.6.Final</version>
+			<version>${weld.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

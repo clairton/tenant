@@ -36,7 +36,7 @@ public class TenantBuilder {
 	}
 
 	public <T, Y> Predicate run(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from, final @TenantValue Y tenantValue)
+			final @NotNull From<?, T> from, final Object tenantValue)
 			throws TenantNotFound {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);

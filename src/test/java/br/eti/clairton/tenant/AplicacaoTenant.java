@@ -16,7 +16,7 @@ public class AplicacaoTenant extends Tenantable<Aplicacao> {
 	@Override
 	public Predicate add(final @NotNull CriteriaBuilder criteriaBuilder,
 			final @NotNull From<?, Aplicacao> from,
-			final @NotNull @TenantValue Object tenantValue) {
+			final @NotNull Object tenantValue) {
 		final Path<String> path = from.get(Aplicacao_.nome);
 		final Predicate predicate = criteriaBuilder.notEqual(path, tenantValue);
 		return predicate;

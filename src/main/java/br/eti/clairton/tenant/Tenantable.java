@@ -9,5 +9,6 @@ public abstract class Tenantable<T> {
 
 	public abstract Predicate add(
 			final @NotNull CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from, final @NotNull Object tenantValue);
+			final @NotNull From<?, T> from,
+			final @NotNull Object tenantValue);
 }

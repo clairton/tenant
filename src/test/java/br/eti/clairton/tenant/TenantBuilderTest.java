@@ -25,6 +25,7 @@ public class TenantBuilderTest {
 	private @Inject EntityManager entityManager;
 	private @Inject Connection connection;
 	private @Inject TenantBuilder tenant;
+
 	private String nome = "OutroTesteQueNãoDeveAparecerNaConsulta";
 
 	@Before
@@ -63,17 +64,17 @@ public class TenantBuilderTest {
 		final CriteriaQuery<Recurso> query = builder.createQuery(Recurso.class);
 		final Root<Recurso> from = query.from(Recurso.class);
 		try {
-			//recurpera os predicados
+			// recurpera os predicados
 			final Predicate predicate = tenant.run(builder, from, nome);
-			//aplicaca os predicados
+			// aplicaca os predicados
 			query.where(predicate);
 		} catch (final TenantNotFound e) {
-			//caso não haja tenant irá lançar a exceção
+			// caso não haja tenant irá lançar a exceção
 		}
 		final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
 		/*
-		 * Retornara somente os Recursos que estão relacionados as Aplicações com nome
-		 * diferente de "AplicaçãoQueNãoDeveAparecerNaConsulta"
+		 * Retornara somente os Recursos que estão relacionados as Aplicações
+		 * com nome diferente de "AplicaçãoQueNãoDeveAparecerNaConsulta"
 		 */
 		final List<Recurso> result = typedQuery.getResultList();
 		assertEquals(1, result.size());
