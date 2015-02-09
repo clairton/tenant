@@ -34,7 +34,7 @@ public class Aplicacao {
 
 	@NotNull
 	@OneToMany(mappedBy = "aplicacao")
-	private Collection<Recurso> recursos = new HashSet<>();
+	private Collection<Recurso> recursos = new HashSet<Recurso>();
 
 	@NotNull
 	@Size(min = 1, max = 250)
