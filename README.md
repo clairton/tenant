@@ -1,6 +1,8 @@
-# Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
+#tenant[![Build Status](https://travis-ci.org/clairton/tenant.svg?branch=master)](https://travis-ci.org/clairton/tenant) 
 
-   Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação
+Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
+
+Supondo que Temos dois modelos, Recurso e Aplicação, onde uma aplicação
 possui vários recursos, mas só iremos mostrar aquelas aplicações que não se
 chamam "AplicaçãoQueNãoDeveAparecerNaConsulta", em um exemplo real
 poderiamos mostrar para o usuário logado só os recursos da aplicação em que
