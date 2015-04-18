@@ -1,4 +1,4 @@
-#tenant[![Build Status](https://travis-ci.org/clairton/tenant.svg?branch=master)](https://travis-ci.org/clairton/tenant) 
+#tenant[![Build Status](https://drone.io/github.com/clairton/tenant/status.png)](https://drone.io/github.com/clairton/tenant/latest)
 
 Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
 
