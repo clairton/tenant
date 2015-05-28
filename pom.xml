@@ -3,10 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.eti.clairton</groupId>
 	<artifactId>tenant</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
+	<url>https://github.com/clairton/tenant</url>
+	<scm>
+      <connection>scm:git:git@github.com:clairton/tenant.git</connection>
+      <url>scm:git:git@github.com:clairton/tenant.git</url>
+      <developerConnection>scm:git:git@github.com:clairton/tenant.git</developerConnection>
+  </scm>
 	<properties>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
-		<github.global.server>github</github.global.server>
 		<weld.version>2.2.8.Final</weld.version>
 	</properties>
 
@@ -153,7 +157,7 @@
 			<extension>
 				<groupId>ar.com.synergian</groupId>
 				<artifactId>wagon-git</artifactId>
-				<version>0.2.2</version>
+				<version>0.2.5</version>
 			</extension>
 		</extensions>
 	</build>
