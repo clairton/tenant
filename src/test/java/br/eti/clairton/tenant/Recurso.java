@@ -28,15 +28,15 @@ public class Recurso {
 
 	@NotNull
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recurso")
-	private final Collection<Operacao> operacoes = new HashSet<Operacao>();
+	private Collection<Operacao> operacoes = new HashSet<Operacao>();
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@NotNull
-	private final Aplicacao aplicacao;
+	private Aplicacao aplicacao;
 
 	@NotNull
 	@Size(min = 1, max = 50)
-	private final String nome;
+	private String nome;
 
 	@Deprecated
 	public Recurso() {

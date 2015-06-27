@@ -27,11 +27,11 @@ public class Operacao {
 
 	@NotNull
 	@Size(min = 1, max = 50)
-	private final String nome;
+	private String nome;
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@NotNull
-	private final Recurso recurso;
+	private Recurso recurso;
 
 	/**
 	 * Construtor padrão.
