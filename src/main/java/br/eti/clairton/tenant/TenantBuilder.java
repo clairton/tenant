@@ -33,19 +33,17 @@ public class TenantBuilder {
 		return !instance.isUnsatisfied();
 	}
 
-	public <T, Y> Predicate run(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, T> from, final Object tenantValue)
-			throws TenantNotFound {
+	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, final @NotNull From<?, T> from, final Object tenantValue) {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);
 		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
-		if (!instance.isUnsatisfied()) {
-			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
-			final Tenantable<T> tenant = cast(instance.get());
-			return tenant.add(criteriaBuilder, from, tenantValue);
-		} else {
+		if (instance.isUnsatisfied()) {
 			logger.debug("Tenant para {} não encontrado", klazz.getSimpleName());
 			throw new TenantNotFound();
+		} else {
+			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
+			final Tenantable<T> tenant = cast(instance.get());
+			return tenant.add(builder, from, tenantValue);
 		}
 	}
 
