@@ -25,11 +25,9 @@ public class AplicacaoTenant extends Tenantable<Aplicacao> {
 	
 	//Contrato que adicionara o Predicado que desejamos
 	@Override
-	public Predicate add(final @NotNull CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, Aplicacao> from,
-			final @NotNull Object tenantValue) {
+	public Predicate add(CriteriaBuilder builder, From<?, Aplicacao> from, Object value) {
 		final Path<String> path = from.get(Aplicacao_.nome);
-		final Predicate predicate = criteriaBuilder.notEqual(path, tenantValue.get());
+		final Predicate predicate = builder.notEqual(path, value);
 		return predicate;
 	}
 }
@@ -63,9 +61,7 @@ public class RecursoTenant extends Tenantable<Recurso> {
 
 	//Contrato que adicionara o Predicado que desejamos
 	@Override
-	public Predicate add(@NotNull final CriteriaBuilder criteriaBuilder,
-			final @NotNull From<?, Recurso> from,
-			final @NotNull Object tenantValue) {
+	public Predicate addCriteriaBuilder criteriaBuilder, From<?, Recurso> from, Object value) {
        /*
         * não temos um predicado diretamente os atributos de Recurso, para
         * sim temos que pegar os Recurso relacionados a Aplicação que
@@ -76,7 +72,7 @@ public class RecursoTenant extends Tenantable<Recurso> {
 	     * e chamaremos o TenantBuilder que irá fazer a de AplicacaoTenant#add
 	     * atravé do CDI e retornar o predicado necessário
 	     */
-		return builder.run(criteriaBuilder, join, tenantValue);
+		return builder.run(criteriaBuilder, join, value);
 	}
 }
 ```

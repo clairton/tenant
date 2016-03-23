@@ -1,5 +1,7 @@
 package br.eti.clairton.tenant;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 import java.lang.annotation.Annotation;
 
 import javax.enterprise.context.Dependent;
@@ -11,29 +13,65 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Tenant Builder.
+ * 
+ * @author Clairton Rodrigo Heinzen<clairton.rodrigo@gmail.com>
+ */
 @Dependent
 public class TenantBuilder {
+	private static final Logger logger = getLogger(TenantBuilder.class);
 
 	private final Instance<Tenantable<?>> tenants;
 
-	private final Logger logger = LogManager.getLogger(TenantBuilder.class);
+	/**
+	 * Constructor for CDI only.
+	 */
+	@Deprecated
+	public TenantBuilder() {
+		this(null);
+	}
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param tenants
+	 *            instance of tenants
+	 */
 	@Inject
 	public TenantBuilder(@Any final Instance<Tenantable<?>> tenants) {
 		super();
 		this.tenants = tenants;
 	}
 
+	/**
+	 * Verify if exist a tenant for type.
+	 * 
+	 * @param klazz
+	 *            type to verify
+	 * @return true/false
+	 */
 	public Boolean exist(final Class<?> klazz) {
 		final TenantType qualifier = getType(klazz);
 		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
 		return !instance.isUnsatisfied();
 	}
 
-	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, final @NotNull From<?, T> from, final Object tenantValue) {
+	/**
+	 * Add the tenant for de {@link From}, id exists.
+	 * 
+	 * @param builder
+	 *            instance of {@link CriteriaBuilder}
+	 * @param from
+	 *            instance of de current {@link From}
+	 * @param tenantValue
+	 *            value of the tenant
+	 * @return {@link Predicate} of the tenant for the {@link From} param
+	 */
+	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, @NotNull final From<?, T> from,
+			final Object tenantValue) {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);
 		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
@@ -42,17 +80,14 @@ public class TenantBuilder {
 			throw new TenantNotFound();
 		} else {
 			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
-			final Tenantable<T> tenant = cast(instance.get());
+			@SuppressWarnings("unchecked")
+			final Tenantable<T> t = (Tenantable<T>) instance.get();
+			final Tenantable<T> tenant = t;
 			return tenant.add(builder, from, tenantValue);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> Tenantable<T> cast(@NotNull final Tenantable<?> tenant) {
-		return (Tenantable<T>) tenant;
-	}
-
-	private final static TenantType getType(final Class<?> klazz) {
+	private TenantType getType(final Class<?> klazz) {
 		return new TenantType() {
 
 			@Override
