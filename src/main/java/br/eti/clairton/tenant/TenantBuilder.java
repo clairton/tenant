@@ -80,11 +80,16 @@ public class TenantBuilder {
 			throw new TenantNotFound();
 		} else {
 			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
-			@SuppressWarnings("unchecked")
-			final Tenantable<T> t = (Tenantable<T>) instance.get();
-			final Tenantable<T> tenant = t;
+			final Tenantable<T> tenant = get(instance);
 			return tenant.add(builder, from, tenantValue);
 		}
+	}
+	
+	public <T> Tenantable<T> get(final Instance<Tenantable<?>> instance){
+		@SuppressWarnings("unchecked")
+		final Tenantable<T> t = (Tenantable<T>) instance.get();
+		final Tenantable<T> tenant = t;
+		return tenant;
 	}
 
 	private TenantType getType(final Class<?> klazz) {
