@@ -3,6 +3,7 @@ package br.eti.clairton.tenant;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
+import javax.validation.constraints.NotNull;
 
 /**
  * Constract for model entity.
@@ -25,5 +26,5 @@ public abstract class Tenantable<T> {
 	 *            value of de tenant
 	 * @return {@link Predicate} for the tenant
 	 */
-	public abstract Predicate add(CriteriaBuilder builder, From<?, T> from, Object value);
+	public abstract Predicate add(@NotNull CriteriaBuilder builder, @NotNull From<?, T> from, @NotNull Object value);
 }
