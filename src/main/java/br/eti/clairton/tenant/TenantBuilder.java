@@ -70,8 +70,7 @@ public class TenantBuilder {
 	 *            value of the tenant
 	 * @return {@link Predicate} of the tenant for the {@link From} param
 	 */
-	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, @NotNull final From<?, T> from,
-			final Object tenantValue) {
+	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, @NotNull final From<?, T> from, final Object tenantValue) {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);
 		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
@@ -85,14 +84,14 @@ public class TenantBuilder {
 		}
 	}
 	
-	public <T> Tenantable<T> get(final Instance<Tenantable<?>> instance){
+	protected <T> Tenantable<T> get(final Instance<Tenantable<?>> instance){
 		@SuppressWarnings("unchecked")
 		final Tenantable<T> t = (Tenantable<T>) instance.get();
 		final Tenantable<T> tenant = t;
 		return tenant;
 	}
 
-	private TenantType getType(final Class<?> klazz) {
+	protected TenantType getType(final Class<?> klazz) {
 		return new TenantType() {
 
 			@Override

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.eti.clairton</groupId>
 	<artifactId>tenant</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<url>https://github.com/clairton/tenant</url>
 	<scm>
       <connection>scm:git:git@github.com:clairton/tenant.git</connection>
@@ -11,7 +11,7 @@
       <developerConnection>scm:git:git@github.com:clairton/tenant.git</developerConnection>
   </scm>
 	<properties>
-		<weld.version>2.2.8.Final</weld.version>
+		<weld.version>2.2.9.Final</weld.version>
 	</properties>
 
 	<dependencies>
