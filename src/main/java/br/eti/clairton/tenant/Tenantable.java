@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Constract for model entity.
  * 
- * @author Clairton Rodrigo Heinzen<clairton.rodrigo@gmail.com>
+ * @author Clairton Rodrigo Heinzen clairton.rodrigo@gmail.com
  *
  * @param <T>
  *            type of model

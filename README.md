@@ -1,4 +1,4 @@
-#tenant[![Build Status](https://drone.io/github.com/clairton/tenant/status.png)](https://drone.io/github.com/clairton/tenant/latest)
+#tenant [![Build Status](https://travis-ci.org/clairton/tenant.svg?branch=master)](https://travis-ci.org/clairton/tenant)
 
 Possibilita adicionar Tenant as consultas JPA através do criteria builder, fazendo uso do CDI.
 
@@ -97,23 +97,11 @@ final TypedQuery<Recurso> typedQuery = entityManager.createQuery(query);
  */
 final List<Recurso> result = typedQuery.getResultList();
 ```
-Para usar será necessário adicionar os repositórios maven:
-
-```xml
-<repository>
-	<id>mvn-repo-releases</id>
-	<url>https://raw.github.com/clairton/mvn-repo/releases</url>
-</repository>
-<repository>
-	<id>mvn-repo-snapshot</id>
-	<url>https://raw.github.com/clairton/mvn-repo/snapshots</url>
-</repository>
-```
- Também adicionar as depêndencias:
+Para usar será necessário adicionar os repositórios maven adicionar as depêndencias:
 ```xml
 <dependency>
     <groupId>br.eti.clairton</groupId>
 	<artifactId>tenant</artifactId>
-	<version>0.1.0</version>
+	<version>${latest}</version>
 </dependency>
 ```

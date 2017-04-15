@@ -1,8 +1,9 @@
 package br.eti.clairton.tenant;
 
-import static org.apache.logging.log4j.LogManager.getLogger;
+import static java.util.logging.Level.FINE;
 
 import java.lang.annotation.Annotation;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
@@ -13,16 +14,15 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.validation.constraints.NotNull;
 
-import org.apache.logging.log4j.Logger;
 
 /**
  * Tenant Builder.
  * 
- * @author Clairton Rodrigo Heinzen<clairton.rodrigo@gmail.com>
+ * @author Clairton Rodrigo Heinzen clairton.rodrigo@gmail.com
  */
 @Dependent
 public class TenantBuilder {
-	private static final Logger logger = getLogger(TenantBuilder.class);
+	private static final Logger logger = Logger.getLogger(TenantBuilder.class.getSimpleName());
 
 	private final Instance<Tenantable<?>> tenants;
 
@@ -68,17 +68,19 @@ public class TenantBuilder {
 	 *            instance of de current {@link From}
 	 * @param tenantValue
 	 *            value of the tenant
+     * @param <T>
+     *.           type of entity
 	 * @return {@link Predicate} of the tenant for the {@link From} param
 	 */
-	public <T, Y> Predicate run(@NotNull final CriteriaBuilder builder, @NotNull final From<?, T> from, final Object tenantValue) {
+	public <T> Predicate run(@NotNull final CriteriaBuilder builder, @NotNull final From<?, T> from, final Object tenantValue) {
 		final Class<?> klazz = (Class<?>) from.getJavaType();
 		final TenantType qualifier = getType(klazz);
 		final Instance<Tenantable<?>> instance = tenants.select(qualifier);
 		if (instance.isUnsatisfied()) {
-			logger.debug("Tenant para {} não encontrado", klazz.getSimpleName());
+			logger.log(FINE, "Tenant para {} não encontrado", klazz.getSimpleName());
 			throw new TenantNotFound();
 		} else {
-			logger.debug("Adicionando Tenant para {}", klazz.getSimpleName());
+			logger.log(FINE, "Adicionando Tenant para {}", klazz.getSimpleName());
 			final Tenantable<T> tenant = get(instance);
 			return tenant.add(builder, from, tenantValue);
 		}

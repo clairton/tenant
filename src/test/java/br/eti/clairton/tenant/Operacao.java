@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 /**
  * Representa uma ação.
  * 
- * @author Clairton Rodrigo Heinzen<clairton.rodrigo@gmail.com>
+ * @author Clairton Rodrigo Heinzen clairton.rodrigo@gmail.com
  */
 @Entity
 @Table(name = "operacoes")
